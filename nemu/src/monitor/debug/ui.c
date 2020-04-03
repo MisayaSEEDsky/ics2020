@@ -36,7 +36,13 @@ static int cmd_q(char *args) {
   return -1;
 }
 
-static int cmd_si(char *args) {
+static int cmd_si(char *args){ 
+	char arg[20];
+	int num;
+
+	sscanf(args, "%s %d",arg,&num);
+	cpu_exec(num);
+
 	printf("this is cmd si.\n");
 	return 0;
 }
