@@ -55,12 +55,16 @@ static int cmd_si(char *args){
 
 static int cmd_info(char *args){
 	char *token = strtok(args," ");
-	if(strcmp(token,"r"))
+	if(token == NULL)
+	{
+		return 0;
+	}
+	if(strcmp(token,"r")==0)
 	{
 		printf("%s:\t%8x\t,",regsl[0],cpu.gpr[0]._32);
 	}
 
-	else if(strcmp(token,"w"))
+	else if(strcmp(token,"w")==0)
 	{
 		printf("tbd\n");
 	}
