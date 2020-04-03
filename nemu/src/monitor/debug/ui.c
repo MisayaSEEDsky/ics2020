@@ -42,6 +42,7 @@ static int cmd_si(char *args){
 	if(token == NULL)
 	{
 		cpu_exec(1);
+		return 0;
 	}
 	//token = strtok(NULL," ");
 	int num = atoi(token);
