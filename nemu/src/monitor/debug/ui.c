@@ -53,6 +53,23 @@ static int cmd_si(char *args){
 	return 0;
 }
 
+static int cmd_info(char *args){
+	char *token = strtok(args," ");
+	if(strcmp(token,"r"))
+	{
+		printf("%s:\t%8x\t,",regsl[0],cpu.gpr[0]._32);
+	}
+
+	else if(strcmp(token,"w"))
+	{
+		printf("tbd\n");
+	}
+	else
+	{
+		printf("???\n");
+	}
+	return 0;
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -64,6 +81,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si","Simple step", cmd_si },
+  { "info","Print Register information", cmd_info },
   /* TODO: Add more commands */
 
 };
