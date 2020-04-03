@@ -37,12 +37,12 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_si(char *args){ 
-	char arg[20];
-	int num;
 
-	sscanf(args, "%s %d",arg,&num);
-	cpu_exec(num);
-	printf("%d \n",num);
+
+
+
+	//cpu_exec(num);
+	//printf("%d \n",num);
 	printf("this is cmd si.\n");
 	return 0;
 }
