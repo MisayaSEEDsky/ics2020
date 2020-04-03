@@ -37,7 +37,7 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_si(char *args) {
-	printf("this is cmd si.");
+	printf("this is cmd si.\n");
 	return 0;
 }
 
