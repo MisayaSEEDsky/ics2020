@@ -42,7 +42,7 @@ static int cmd_si(char *args){
 
 	sscanf(args, "%s %d",arg,&num);
 	cpu_exec(num);
-
+	printf("%d \n",num);
 	printf("this is cmd si.\n");
 	return 0;
 }
