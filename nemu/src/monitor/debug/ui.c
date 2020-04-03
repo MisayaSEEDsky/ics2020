@@ -37,9 +37,11 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_si(char *args){ 
+	printf(".....\n");
 	char *token = strtok(args," ");
 	token = strtok(NULL," ");
-	int num = atoi(token);	
+	int num = atoi(token);
+	printf("%d \n",num);	
 	cpu_exec(num);
 	printf("%d \n",num);
 	printf("this is cmd si.\n");
