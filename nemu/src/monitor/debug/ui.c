@@ -86,9 +86,9 @@ static int cmd_x(char *args){
 		printf("time???");
 		return 0;
 	}
-	int ts ;
+	int ts ;	//times
 	ts = atoi(token);
-	printf("%d\n",ts);
+	//printf("%d\n",ts);
 
 	token = strtok(NULL," ");
 	if(token == NULL)
@@ -96,10 +96,19 @@ static int cmd_x(char *args){
 		printf("address???");
 		return 0;
 	}
-	int ads;
+	uint32_t ads;	//address
 	sscanf(token,"%x",&ads);
-	printf("%#x\n",ads);
-	//vaddr_read(address,
+	//printf("%#x\n",ads);
+	
+	for(int i = 0 ; i < ts;i++)
+	{	
+		printf("%#010x\t",ads);
+		uint32_t temp = vaddr_read(ads,4);
+		printf("%#010x\t",temp);
+		//printf("%x");
+		ads += 4;
+	}
+
 	return 0;
 }
 
