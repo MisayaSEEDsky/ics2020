@@ -78,6 +78,31 @@ static int cmd_info(char *args){
 	}
 	return 0;
 }
+
+static int cmd_x(char *args){
+	char *token = strtok(args," ");
+	if(token == NULL)
+	{
+		printf("time???");
+		return 0;
+	}
+	int ts ;
+	ts = atoi(token);
+	printf("%d",ts);
+
+	token = strtok(NULL," ");
+	if(token == NULL)
+	{
+		printf("address???");
+		return 0;
+	}
+	int ads;
+	ads = atoi(token);
+	printf("%#x",ads);
+	//vaddr_read(address,
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -90,6 +115,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si","Simple step", cmd_si },
   { "info","Print Register information", cmd_info },
+  { "x", "Scan memory", cmd_x },
   /* TODO: Add more commands */
 
 };
