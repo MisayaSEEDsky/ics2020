@@ -88,7 +88,7 @@ static int cmd_x(char *args){
 	}
 	int ts ;
 	ts = atoi(token);
-	printf("%d",ts);
+	printf("%d\n",ts);
 
 	token = strtok(NULL," ");
 	if(token == NULL)
@@ -98,7 +98,7 @@ static int cmd_x(char *args){
 	}
 	int ads;
 	ads = atoi(token);
-	printf("%#x",ads);
+	printf("%x\n",ads);
 	//vaddr_read(address,
 	return 0;
 }
