@@ -103,9 +103,16 @@ static int cmd_x(char *args){
 	for(int i = 0 ; i < ts;i++)
 	{	
 		printf("%#010x\t",ads);
-		uint32_t temp = vaddr_read(ads,4);
+		uint32_t temp = vaddr_read(ads,4);	//4.1
 		printf("%#010x\t",temp);
-		//printf("%x");
+		printf(" ... ");
+		for(int j = 0 ; j < 4 ;j++)
+		{
+			temp = vaddr_read(ads,1);	//4.2
+			printf("%x ",temp);
+		}
+
+		printf("\n");
 		ads += 4;
 	}
 
