@@ -110,10 +110,11 @@ static int cmd_x(char *args){
 		{
 			temp = vaddr_read(ads,1);	//4.2
 			printf("%02x ",temp);
+			ads++;
 		}
 
 		printf("\n");
-		ads += 4;
+		//ad += 4;
 	}
 
 	return 0;
