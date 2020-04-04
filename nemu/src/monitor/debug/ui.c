@@ -97,8 +97,8 @@ static int cmd_x(char *args){
 		return 0;
 	}
 	int ads;
-	ads = atoi(token);
-	printf("%x\n",ads);
+	sscanf(token,"%x",&ads);
+	printf("%#x\n",ads);
 	//vaddr_read(address,
 	return 0;
 }
