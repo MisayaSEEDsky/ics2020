@@ -109,7 +109,7 @@ static int cmd_x(char *args){
 		for(int j = 0 ; j < 4 ;j++)
 		{
 			temp = vaddr_read(ads,1);	//4.2
-			printf("%x ",temp);
+			printf("%02x ",temp);
 		}
 
 		printf("\n");
