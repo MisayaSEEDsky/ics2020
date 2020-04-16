@@ -124,7 +124,8 @@ static int cmd_p(char *args)
 {
 	bool* flag = malloc(sizeof(bool));
 	*flag = true;
-	expr(args,flag);
+	int result = expr(args,flag);
+	printf("%#x\n",result);
 	return 0;
 }
 
