@@ -120,6 +120,14 @@ static int cmd_x(char *args){
 	return 0;
 }
 
+static int cmd_p(char *args)
+{
+	bool* flag = malloc(sizeof(bool));
+	*flag = true;
+	expr(args,flag);
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -133,6 +141,7 @@ static struct {
   { "si","Simple step", cmd_si },
   { "info","Print Register information", cmd_info },
   { "x", "Scan memory", cmd_x },
+  { "p", "Evaluation of expression", cmd_p }
   /* TODO: Add more commands */
 
 };
