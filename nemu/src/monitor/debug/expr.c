@@ -201,14 +201,14 @@ uint32_t eval(int p,int q){
 			for(int i= 0; i < 4;i++)	tokens[p].str[i] = tokens[p].str[i+1];
 			if(strcmp(tokens[p].str,"eip") == 0 )	number = cpu.eip;
 		
-		else{
-			int i = 0;
-			for(;i < 8;i++){
-				if(strcmp(tokens[p].str,regsl[i]) == 0 ){
-					number = cpu.gpr[i]._32;
-					break;
+			else{
+				int i = 0;
+				for(;i < 8;i++){
+					if(strcmp(tokens[p].str,regsl[i]) == 0 ){
+						number = cpu.gpr[i]._32;
+						break;
+					}
 				}
-			}
 			//number = cpu.gpr[i]._32;
 			}
 		}
@@ -260,7 +260,7 @@ uint32_t expr(char *e, bool *success) {
   
   for (int i = 0;i < nr_token;i++)
   {
-	if(tokens[i].type == '*'&&(i == 0 || tokens[i-1].type == '+' || tokens[i-1].type == '-' || tokens[i-1].type == '/'|| tokens[i+1].type == TK_REG))
+	if(tokens[i].type == '*'&&(i == 0 || tokens[i-1].type == '+' || tokens[i-1].type == '-' || tokens[i-1].type == '/'))
 	{
 		tokens[i].type = TK_POINT;
 	}
