@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_A, TK_B, TK_REG
+  TK_NOTYPE = 256, TK_EQ, TK_SIXTEEN, TK_TEN, TK_REG, TK_UEQ, TK_POINT
 
   /* TODO: Add more token types */
 
@@ -28,11 +28,15 @@ static struct rule {
   {"\\-",'-'},		// minus
   {"\\*",'*'},		// multiply
   {"\\/",'/'},		// devide
+  {"!=", TK_UEQ},	// unequal
   {"\\(",'('},		//
   {"\\)",')'},		//
-  {"0x[A-F0-9]+",TK_A},	// 16
-  {"[0-9]+",TK_B},		// 10
-  {"\\$[a-ehilpx]{2,3}", TK_REG}	//register
+  {"0x[A-F0-9]+",TK_SIXTEEN},	// 16
+  {"[0-9]+",TK_TEN},		// 10
+  {"\\$[a-ehilpx]{2,3}", TK_REG},	//register
+  {"&&" , '&'},		//and
+  {"\\|\\|", '|'},	//or
+  {"!",'!'},		//not
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -94,8 +98,12 @@ static bool make_token(char *e) {
 		case '/':
 		case '(':
 		case ')':
-		case TK_A:
-		case TK_B:
+		case '&':
+		case '|':
+		case TK_UEQ:
+		case '!':
+		case TK_SIXTEEN:
+		case TK_TEN:
 		case TK_EQ:
 		case TK_REG:
 			{
@@ -119,6 +127,118 @@ static bool make_token(char *e) {
   return true;
 }
 
+bool check_parentheses(int p,int q){
+	int left = 0;
+	int right = 0;
+	if(!(tokens[p].type == '(' && tokens[q].type == ')'))
+	{
+		return false;
+	}
+	p++;
+	for(;p<q;p++){
+		if(tokens[p].type == '('){
+			left +=1;
+		}
+		else if(tokens[p].type == ')'){
+			right += 1;
+		}
+		if(right > left + 1)
+			assert(0);
+		else if (right == left + 1)
+			return false;
+	}
+	if(left != right )	return false;
+	return true;	
+}
+
+uint32_t find_dominated_op(int p,int q){
+	int op = p;
+	int quote_match = 0;
+	for (int i = p;i < q;i++){
+		if(tokens[i].type == '(')	quote_match++;
+		else if(tokens[i].type == ')')	quote_match--;
+		else if(quote_match == 0){
+			if(tokens[i].type == TK_EQ || tokens[i].type == TK_UEQ || tokens[i].type == '&' || tokens[i].type == '|'){
+				op = i;
+				return op;
+			}
+			if(tokens[i].type == TK_POINT){
+				continue;
+			}	
+			else if(tokens[i].type == '+' || tokens[i].type == '-' || tokens[i].type == '*' || tokens[i].type == '/'){
+				if(tokens[i].type == '+' || tokens[i].type == '-'){
+					if(tokens[i].type == '-' && (tokens[i-1].type == '+' || tokens[i-1].type == '-' || tokens[i-1].type == '*' || tokens[i-1].type == '/'));
+
+					else op = i;
+				}
+				else{
+					if(tokens[op].type == '+' || tokens[op].type == '-');
+					else op = i;
+				}
+
+			}
+		}
+
+	}
+	return op;
+}
+
+
+uint32_t eval(int p,int q){
+	if(p > q){
+		/*Bad expression*/
+		return false;
+	}
+	else if(p == q){
+		/*Single token.
+		 * For now this token should be a number.
+		 * Return the value of the number.
+		 */
+		int number = 0;
+		if(tokens[p].type == TK_SIXTEEN)	sscanf(tokens[p].str,"%x",&number);
+		else if (tokens[p].type == TK_TEN)	sscanf(tokens[p].str,"%d",&number);
+		else if (tokens[p].type == TK_REG){
+			for(int i= 0; i < 4;i++)	tokens[p].str[i] = tokens[p].str[i+1];
+			if(strcmp(tokens[p].str,"eip") == 0 )	number = cpu.eip;
+		}
+		else{
+			for(int i= 0;i < 8;i++){
+				if(strcmp(tokens[p].str,regsl[i]) == 0 ){
+					number = cpu.gpr[i]._32;
+					break;
+				}
+			}
+		}
+		return number;
+	}
+	else if (check_parentheses(p,q) == true){
+		/*The expression is surrounded by a matched pair of parentheses.
+		 * If that is the case, just throw away the parentheses.
+		 */
+		return eval(p+1,q-1);
+	}
+	else{
+		/*We should do more things here.*/
+		int op,val1,val2;
+		op = find_dominated_op(p,q);
+		val1 = eval(p,op - 1);
+		val2 = eval(op+1,q);
+		switch(tokens[op].type){
+			case '+':return val1 + val2;
+			case '-':return val1 - val2;
+			case '*':return val1 * val2;
+			case '/':return val1 / val2;
+			case TK_EQ: return val1 == val2;
+			case TK_UEQ:return val1 != val2;
+			case '&':return val1 & val2;
+			case '|':return val1 | val2;
+			default : assert(0);
+		}
+	}
+	return 0;
+}
+
+
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
@@ -126,7 +246,9 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+ // TODO();
+  int p = 0, q = nr_token - 1;
+  return eval(p,q);
 
-  return 0;
+  //return 0;
 }

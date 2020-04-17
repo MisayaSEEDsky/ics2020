@@ -122,10 +122,17 @@ static int cmd_x(char *args){
 
 static int cmd_p(char *args)
 {
-	bool* flag = malloc(sizeof(bool));
-	*flag = true;
-	int result = expr(args,flag);
-	printf("%#x\n",result);
+	char *arg = strtok(NULL,"@");
+	bool success = true;
+	int result = expr(arg,&success);
+	if (success)
+	{
+		printf("%#x\n",result);
+	}
+	else
+	{
+		printf("Fail !\n");
+	}
 	return 0;
 }
 
