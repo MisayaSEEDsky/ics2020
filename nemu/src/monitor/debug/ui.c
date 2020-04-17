@@ -97,7 +97,18 @@ static int cmd_x(char *args){
 		return 0;
 	}
 	uint32_t ads;	//address
-	sscanf(token,"%x",&ads);
+	if(token[0]!='0')
+	{
+		bool success = true;
+		ads = expr(token,&success);
+		if(success == false)
+		{
+			printf("fail\n");
+			return 0;
+		}
+	}
+	else
+		sscanf(token,"%x",&ads);
 	//printf("%#x\n",ads);
 	
 	for(int i = 0 ; i < ts;i++)
