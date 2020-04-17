@@ -224,6 +224,12 @@ uint32_t eval(int p,int q){
 		/*We should do more things here.*/
 		int op,val1,val2;
 		op = find_dominated_op(p,q);
+		if(op == p && tokens[p].type == TK_POINT)	//*
+			return  vaddr_read(eval(p+1,q),4);
+		if(op == p && tokens[p].type == '-')		//-
+			return  -eval(op+1,q);
+		if(op == p && tokens[p].type == '!')		//!
+			return !eval(op+1,q);
 		val1 = eval(p,op - 1);
 		val2 = eval(op+1,q);
 		switch(tokens[op].type){
@@ -251,6 +257,14 @@ uint32_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
  // TODO();
   int p = 0, q = nr_token - 1;
+  
+  for (int i = 0;i < nr_token;i++)
+  {
+	if(tokens[i].type == '*'&&(i == 0 || tokens[i-1].type == '+' || tokens[i-1].type == '-' || tokens[i-1].type == '/'))
+	{
+		tokens[i].type = TK_POINT;
+	}
+  }
   return eval(p,q);
 
   //return 0;
