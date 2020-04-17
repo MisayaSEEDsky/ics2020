@@ -202,12 +202,14 @@ uint32_t eval(int p,int q){
 			if(strcmp(tokens[p].str,"eip") == 0 )	number = cpu.eip;
 		}
 		else{
-			for(int i= 0;i < 8;i++){
+			int i = 0;
+			for(;i < 8;i++){
 				if(strcmp(tokens[p].str,regsl[i]) == 0 ){
 					number = cpu.gpr[i]._32;
 					break;
 				}
 			}
+			number = cpu.gpr[i]._32;
 		}
 		return number;
 	}
