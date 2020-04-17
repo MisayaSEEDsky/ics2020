@@ -200,7 +200,7 @@ uint32_t eval(int p,int q){
 		else if (tokens[p].type == TK_REG){
 			for(int i= 0; i < 4;i++)	tokens[p].str[i] = tokens[p].str[i+1];
 			if(strcmp(tokens[p].str,"eip") == 0 )	number = cpu.eip;
-		}
+		
 		else{
 			int i = 0;
 			for(;i < 8;i++){
@@ -209,7 +209,8 @@ uint32_t eval(int p,int q){
 					break;
 				}
 			}
-			number = cpu.gpr[i]._32;
+			//number = cpu.gpr[i]._32;
+			}
 		}
 		return number;
 	}
