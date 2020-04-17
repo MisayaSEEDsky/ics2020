@@ -69,6 +69,7 @@ Token tokens[32];
 int nr_token;
 
 static bool make_token(char *e) {
+//  memset(tokens,0,sizeof(tokens);	//clear
   int position = 0;
   int i;
   regmatch_t pmatch;
