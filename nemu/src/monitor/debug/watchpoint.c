@@ -99,7 +99,7 @@ int set_watchpoint(char *e)
 
 bool delete_watchpoint(int NO)
 {
-	if(free_wp(NO)) return true;
+	if(free_up(NO)) return true;
 	else 
 	{
 		printf("Watchpoing deleted failed!\n");
