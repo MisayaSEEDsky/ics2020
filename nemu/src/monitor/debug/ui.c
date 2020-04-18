@@ -70,7 +70,8 @@ static int cmd_info(char *args){
 
 	else if(strcmp(token,"w")==0)
 	{
-		printf("tbd in PA1.3\n");
+		printf("NO  Expr                     Old Value \n");
+		list_watchpoint();
 	}
 	else
 	{
@@ -147,6 +148,21 @@ static int cmd_p(char *args)
 	return 0;
 }
 
+static int cmd_w(char *args)
+{
+	set_watchpoint(args);
+	return 0;
+}
+
+static int cmd_d(char *args)
+{
+	char *arg = strtok(NULL,"@");
+	int NO;
+	sscanf(arg, "%d", &NO);
+	delete_watchpoint(NO);
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -160,7 +176,10 @@ static struct {
   { "si","Simple step", cmd_si },
   { "info","Print Register information", cmd_info },
   { "x", "Scan memory", cmd_x },
-  { "p", "Evaluation of expression", cmd_p }
+  { "p", "Evaluation of expression", cmd_p },
+  { "w", "Set A New WatchPoing", cmd_w },
+  { "d", "Delete A WatchPoint", cmd_d }
+  //{ "info w", "List All WatchPoints", cmd_info }
   /* TODO: Add more commands */
 
 };
