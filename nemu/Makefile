@@ -52,3 +52,5 @@ gdb: $(BINARY)
 
 clean: 
 	rm -rf $(BUILD_DIR)
+count:
+	find -name "*[.h|.c]" |xargs cat|wc -l
