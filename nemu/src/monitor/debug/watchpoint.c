@@ -127,7 +127,7 @@ WP* scan_watchpoint(void)
 	bool success = true;
 	if(p == NULL)
 	{
-		printf("No Watchpoint\n");
+		//printf("No Watchpoint\n");
 		return NULL;
 	}
 	else
