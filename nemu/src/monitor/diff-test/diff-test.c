@@ -160,7 +160,7 @@ void difftest_step(uint32_t eip) {
 	  printf("r.edi:%#x,cpu.edi:%#x\n",r.edi,cpu.edi);
 	  printf("r.esi:%#x,cpu.esi:%#x\n",r.esi,cpu.esi);
 	  printf("r.eax:%#x,cpu.eax:%#x\n",r.eax,cpu.eax);
-	  diff = true;
+	 // diff = true;
   }
   if (diff) {
     nemu_state = NEMU_END;
