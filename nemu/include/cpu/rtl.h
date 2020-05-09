@@ -182,7 +182,7 @@ static inline void rtl_eqi(rtlreg_t* dest, const rtlreg_t* src1, int imm) {
 
 static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
   // dest <- (src1 != 0 ? 1 : 0)
-  *dest = *src1 == 0 ? 1: 0;
+  *dest = *src1 != 0 ? 1: 0;
  
 }
 
