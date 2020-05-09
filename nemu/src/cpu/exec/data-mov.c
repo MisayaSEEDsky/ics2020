@@ -7,9 +7,9 @@ make_EHelper(mov) {
 
 make_EHelper(push) {
   //TODO();
-  t0 = id_dest->val;
-  rtl_push(&t0);
-  if (id_dest->type == OP_TYPE_REG)
+ // t0 = id_dest->val;
+  rtl_push(&id_dest->val);
+ /* if (id_dest->type == OP_TYPE_REG)
   {
 	  rtl_sr(id_dest->reg,id_dest->width,&t0);
   }
@@ -21,7 +21,7 @@ make_EHelper(push) {
   {
 	  assert(0);
   }
-
+*/
   print_asm_template1(push);
 }
 
