@@ -7,15 +7,15 @@ make_EHelper(mov) {
 
 make_EHelper(push) {
   //TODO();
-  t0 = id_dest->val;
-  rtl_push(&t0);
+  t1 = id_dest->val;
+  rtl_push(&t1);
   if (id_dest->type == OP_TYPE_REG)
   {
-	  rtl_sr(id_dest->reg,id_dest->width,&t0);
+	  rtl_sr(id_dest->reg,id_dest->width,&t1);
   }
   else if(id_dest->type == OP_TYPE_MEM)
   {
-	  rtl_sm(&id_dest->addr,id_dest->width,&t0);
+	  rtl_sm(&id_dest->addr,id_dest->width,&t1);
   }
   else
   {
