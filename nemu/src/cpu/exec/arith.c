@@ -5,7 +5,7 @@ make_EHelper(add) {
   rtl_sltu(&t3, &t2, &id_dest->val);
 
   operand_write(id_dest, &t2);
-  printf("t2:%#x\n",t2);
+  //printf("t2:%#x\n",t2);
   rtl_update_ZFSF(&t2,id_dest->width);
 
   rtl_sltu(&t0, &t2, &id_dest->val);
