@@ -35,8 +35,8 @@ make_EHelper(xor) {
   }
   else assert(0);
   t1 = 0;
-  rtl_set_OF(&t3);
-  rtl_set_CF(&t3);
+  rtl_set_OF(&t2);
+  rtl_set_CF(&t2);
   rtl_update_ZFSF(&id_dest->val,id_dest->width);
 
 
