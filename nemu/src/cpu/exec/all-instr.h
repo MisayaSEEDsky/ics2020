@@ -25,3 +25,5 @@ make_EHelper(add);
 make_EHelper(leave);
 //make_EHelper(2byte_esc);
 make_EHelper(setcc);
+make_EHelper(inc);
+
