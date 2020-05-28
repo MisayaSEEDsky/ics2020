@@ -3,7 +3,7 @@
 
 #include "nemu.h"
 
-extern rtlreg_t t0, t1, t2, t3, t4, t5;
+extern rtlreg_t t0, t1, t2, t3;
 extern const rtlreg_t tzero;
 
 /* RTL basic instructions */
@@ -194,18 +194,19 @@ static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
 
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-  t4 = *result;
+  rtlreg_t a1,a2;
+  a1 = *result;
   switch(width)
   {
 	  case 1:
-		  t4 = (*result * 0x000000ff);
+		  a1 = (*result * 0x000000ff);
 		  break;
 	  case 2:
-		  t4 = (*result & 0x0000ffff);
+		  a1 = (*result & 0x0000ffff);
 		  break;
   }
-  rtl_eq0(&t5, &t4);
-  rtl_set_ZF(&t5);
+  rtl_eq0(&a2, &a1);
+  rtl_set_ZF(&a2);
 }
 
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
