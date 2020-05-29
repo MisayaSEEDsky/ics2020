@@ -212,9 +212,9 @@ static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
 	//t0 = result[width * 8 -1];
-
-       rtl_shri(&t1, result,width*8 -1 );
-	rtl_set_SF(&t1);	
+	rtlreg_t a1;
+       rtl_shri(&a1, result,width*8 -1 );
+	rtl_set_SF(&a1);	
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {
