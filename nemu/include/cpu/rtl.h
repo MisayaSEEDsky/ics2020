@@ -214,7 +214,7 @@ static inline void rtl_update_SF(const rtlreg_t* result, int width) {
 	//t0 = result[width * 8 -1];
 
        rtl_shri(&t0, result,width*8 -1 );
-	rtl_set_SF(&t1);	
+	rtl_set_SF(&t0);	
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {
