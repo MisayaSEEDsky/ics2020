@@ -46,3 +46,6 @@ make_EHelper(idiv);
 make_EHelper(jmp);
 make_EHelper(jmp_rm);
 make_EHelper(sbb);
+make_EHelper(out);
+make_EHelper(in);
+
