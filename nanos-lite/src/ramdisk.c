@@ -2,6 +2,8 @@
 
 extern uint8_t ramdisk_start;
 extern uint8_t ramdisk_end;
+//extern void ramdisk_read(void *buf,off_t offset, size_t len);
+//extern size_t get_ramdisk_size() ;
 #define RAMDISK_SIZE ((&ramdisk_end) - (&ramdisk_start))
 
 /* The kernel is monolithic, therefore we do not need to
