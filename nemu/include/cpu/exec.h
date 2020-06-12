@@ -5,7 +5,7 @@
 
 #define make_EHelper(name) void concat(exec_, name) (vaddr_t *eip)
 typedef void (*EHelper) (vaddr_t *);
-
+void raise_intr(uint8_t NO,vaddr_t ret_addr);
 #include "cpu/decode.h"
 
 static inline uint32_t instr_fetch(vaddr_t *eip, int len) {
