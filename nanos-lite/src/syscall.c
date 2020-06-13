@@ -4,8 +4,8 @@
 
 int mm_brk(uint32_t new_brk);
 
-static inline uintptr_t sys_open(uintptr_t pathname, uintptr_t flags, uintptr_t mode) {
-  TODO();
+static inline uintptr_t sys_open(_RegSet *r, uintptr_t pathname, uintptr_t flags, uintptr_t mode) {
+  SYSCALL_ARG1(r) = fs_open((char *)pathname, flags,mode);
   return 1;
 }
 
@@ -15,18 +15,21 @@ static inline uintptr_t sys_write(_RegSet *r,uintptr_t fd, uintptr_t buf, uintpt
   return 1;
 }
 
-static inline uintptr_t sys_read(uintptr_t fd, uintptr_t buf, uintptr_t len) {
-  TODO();
+static inline uintptr_t sys_read(_RegSet *r, uintptr_t fd, uintptr_t buf, uintptr_t len) {
+  //TODO();
+  	SYSCALL_ARG1(r) = fs_read(fd, (void *)buf,len);
+	return 1;
+}
+
+static inline uintptr_t sys_lseek(_RegSet *r, uintptr_t fd, uintptr_t offset, uintptr_t whence) {
+  SYSCALL_ARG1(r) = fs_lseek(fd, offset, whence);
   return 1;
 }
 
-static inline uintptr_t sys_lseek(uintptr_t fd, uintptr_t offset, uintptr_t whence) {
-  return fs_lseek(fd, offset, whence);
-}
-
-static inline uintptr_t sys_close(uintptr_t fd) {
-  TODO();
-  return 1;
+static inline uintptr_t sys_close(_RegSet *r, uintptr_t fd) {
+  //TODO();
+  	SYSCALL_ARG1(r) = fs_close(fd);
+	return 1;
 }
 
 static inline uintptr_t sys_brk(_RegSet *r) {
