@@ -29,9 +29,10 @@ static inline uintptr_t sys_close(uintptr_t fd) {
   return 1;
 }
 
-static inline uintptr_t sys_brk(uintptr_t new_brk) {
-  TODO();
-  return 1;
+static inline uintptr_t sys_brk(_RegSet *r) {
+  //TODO();
+  	SYSCALL_ARG1(r) = 0;
+	return 1;
 }
 
 static inline uintptr_t sys_none(_RegSet *r)
