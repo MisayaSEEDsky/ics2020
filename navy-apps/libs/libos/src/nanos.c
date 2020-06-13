@@ -35,7 +35,7 @@ void *_sbrk(intptr_t increment){
 	static intptr_t programbreak = (intptr_t)&end;
 	intptr_t pre_programbreak = programbreak;
 
-	if(_syscall_(SYS_brk, programbreak + increament,0,0) == 0)//success
+	if(_syscall_(SYS_brk, programbreak + increment,0,0) == 0)//success
 	{
 		programbreak = pre_programbreak + increment;
 		return  (void*)pre_programbreak;
