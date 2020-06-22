@@ -65,15 +65,15 @@ paddr_t page_translate(vaddr_t addr, bool is_write) {
   PDE pde;
   pde.val = paddr_read((PDT_base << 12) + (dir << 2), 4);
   if (!pde.present) {
-    Log("page_translate: addr: 0x%x\n", addr);
-    Log("page_translate: dir: 0x%x page: 0x%x offset: 0x%x PDT_base: 0x%x\n", dir, page, offset, PDT_base);
+    //Log("page_translate: addr: 0x%x\n", addr);
+    //Log("page_translate: dir: 0x%x page: 0x%x offset: 0x%x PDT_base: 0x%x\n", dir, page, offset, PDT_base);
     //assert(pde.present);
   }
   PTE pte;
   // Log("page_translate: page_frame: 0x%x\n", pde.page_frame);
   pte.val = paddr_read((pde.page_frame << 12) + (page << 2), 4);
   if (!pte.present) {
-    Log("page_translate: addr: 0x%x\n", addr);
+    //Log("page_translate: addr: 0x%x\n", addr);
     //assert(pte.present);
   }
   paddr_t paddr = (pte.page_frame << 12) | offset;
