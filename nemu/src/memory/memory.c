@@ -11,7 +11,7 @@ uint8_t pmem[PMEM_SIZE];
 
 /* Memory accessing interfaces */
 
-paddr_t page_translate(vaddr_t vaddr, bool writing)
+/*paddr_t page_translate(vaddr_t vaddr, bool writing)
 {
         PDE pde;
         PTE pte;
@@ -49,7 +49,74 @@ paddr_t page_translate(vaddr_t vaddr, bool writing)
         paddr_write(PTE_addr,4,pte.val);
         return physical_addr;
 }
+*/
 
+/*uint32_t page_translate(vaddr_t addr, bool iswrite) {
+	if (cpu.PG == 1) {
+		paddr_t pde_base = cpu.cr3;
+		paddr_t pde_address = pde_base + ((addr >> 22) << 2);
+		paddr_t pde = paddr_read(pde_address, 4);
+		if (!(pde & 0x1)) {
+			Log("addr = 0x%x, iswrite = %d", addr, iswrite);
+			Log("pde = 0x%x, pde_base = 0x%x, pde_address = 0x%x", pde, pde_base, pde_address);
+			assert(0);
+		}
+
+		paddr_t pte_base = pde & 0xfffff000;
+		//paddr_t pte_address = pte_base + (((addr & 0x003ff000) >> 12) << 2);
+		paddr_t pte_address = pte_base + ((addr & 0x003ff000) >> 10);
+		paddr_t pte = paddr_read(pte_address, 4);
+		if (!(pte & 0x1)) {
+			Log("addr = 0x%x, iswrite = %d", addr, iswrite);
+			Log("pte = 0x%x", pte);
+			assert(0);
+		}
+		paddr_t page_address = (pte & 0xfffff000) + (addr & 0xfff);
+
+		// set the access and dirty
+		pde = pde | 0x20;
+		pte = pte | 0x20;
+		if (iswrite) {
+			pde = pde | 0x40;
+			pte = pte | 0x40;
+		}
+		paddr_write(pde_address, 4, pde);
+		paddr_write(pte_address, 4, pte);
+
+		return page_address;
+	}
+	else {
+		return addr;
+	}
+}*/
+
+paddr_t page_translate(vaddr_t addr, bool is_write) {
+
+ if (!cpu.cr0.paging) return addr;
+ // Log("page_translate: addr: 0x%x\n", addr);
+  paddr_t dir = (addr >> 22) & 0x3ff;
+  paddr_t page = (addr >> 12) & 0x3ff;
+  paddr_t offset = addr & 0xfff;
+  paddr_t PDT_base = cpu.cr3.page_directory_base;
+  //Log("page_translate: dir: 0x%x page: 0x%x offset: 0x%x PDT_base: 0x%x\n", dir, page, offset, PDT_base);
+  PDE pde;
+  pde.val = paddr_read((PDT_base << 12) + (dir << 2), 4);
+  if (!pde.present) {
+    Log("page_translate: addr: 0x%x\n", addr);
+    Log("page_translate: dir: 0x%x page: 0x%x offset: 0x%x PDT_base: 0x%x\n", dir, page, offset, PDT_base);
+    assert(pde.present);
+  }
+  PTE pte;
+  // Log("page_translate: page_frame: 0x%x\n", pde.page_frame);
+  pte.val = paddr_read((pde.page_frame << 12) + (page << 2), 4);
+  if (!pte.present) {
+    Log("page_translate: addr: 0x%x\n", addr);
+    assert(pte.present);
+  }
+  paddr_t paddr = (pte.page_frame << 12) | offset;
+  //Log("page_translate: paddr: 0x%x\n", paddr);
+  return paddr;
+}
 
 uint32_t paddr_read(paddr_t addr, int len) {
   	int mmio_id;
