@@ -16,26 +16,26 @@ paddr_t page_translate(vaddr_t vaddr)
         PDE pde;
         PTE pte;
 
-        Log("vaddr:%#x",vaddr);
-        Log("CR3:%#x",cpu.cr3.page_directory_base);
+        //Log("vaddr:%#x",vaddr);
+       // Log("CR3:%#x",cpu.cr3.page_directory_base);
 
         uint32_t DIR  = (vaddr >> 22);
-        Log("DIR:%#x",DIR);
+        //Log("DIR:%#x",DIR);
         uint32_t PDE_addr = (cpu.cr3.page_directory_base << 12) + (DIR << 2);
         pde.val = paddr_read(PDE_addr, 4);
-        Log("PDE_addr:%#x",PDE_addr);
-        Log("PDE_val:%#x",pde.val);
+      //  Log("PDE_addr:%#x",PDE_addr);
+       // Log("PDE_val:%#x",pde.val);
         assert(pde.present);
 
         uint32_t PAGE = ((vaddr >> 12) & 0x3ff);
         uint32_t PTE_addr = (pde.val & 0xfffff000) + (PAGE << 2);
         pte.val = paddr_read(PTE_addr, 4);
-        Log("PTE_addr:%#x",PTE_addr);
-        Log("PTE_val:%#x",pte.val);
+       // Log("PTE_addr:%#x",PTE_addr);
+       // Log("PTE_val:%#x",pte.val);
         assert(pte.present);
 
         uint32_t physical_addr = (pte.val & 0xfffff000) + (vaddr & 0xfff);
-        Log("Physical_addr:%#x",physical_addr);
+        //Log("Physical_addr:%#x",physical_addr);
 
         pde.accessed = 1;
         paddr_write(PDE_addr,4,pde.val);
