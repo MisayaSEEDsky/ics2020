@@ -51,44 +51,7 @@ uint8_t pmem[PMEM_SIZE];
 }
 */
 
-/*uint32_t page_translate(vaddr_t addr, bool iswrite) {
-	if (cpu.PG == 1) {
-		paddr_t pde_base = cpu.cr3;
-		paddr_t pde_address = pde_base + ((addr >> 22) << 2);
-		paddr_t pde = paddr_read(pde_address, 4);
-		if (!(pde & 0x1)) {
-			Log("addr = 0x%x, iswrite = %d", addr, iswrite);
-			Log("pde = 0x%x, pde_base = 0x%x, pde_address = 0x%x", pde, pde_base, pde_address);
-			assert(0);
-		}
 
-		paddr_t pte_base = pde & 0xfffff000;
-		//paddr_t pte_address = pte_base + (((addr & 0x003ff000) >> 12) << 2);
-		paddr_t pte_address = pte_base + ((addr & 0x003ff000) >> 10);
-		paddr_t pte = paddr_read(pte_address, 4);
-		if (!(pte & 0x1)) {
-			Log("addr = 0x%x, iswrite = %d", addr, iswrite);
-			Log("pte = 0x%x", pte);
-			assert(0);
-		}
-		paddr_t page_address = (pte & 0xfffff000) + (addr & 0xfff);
-
-		// set the access and dirty
-		pde = pde | 0x20;
-		pte = pte | 0x20;
-		if (iswrite) {
-			pde = pde | 0x40;
-			pte = pte | 0x40;
-		}
-		paddr_write(pde_address, 4, pde);
-		paddr_write(pte_address, 4, pte);
-
-		return page_address;
-	}
-	else {
-		return addr;
-	}
-}*/
 
 paddr_t page_translate(vaddr_t addr, bool is_write) {
 
