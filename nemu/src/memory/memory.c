@@ -11,6 +11,46 @@ uint8_t pmem[PMEM_SIZE];
 
 /* Memory accessing interfaces */
 
+paddr_t page_translate(vaddr_t vaddr)
+{
+        PDE pde;
+        PTE pte;
+
+        Log("vaddr:%#x",vaddr);
+        Log("CR3:%#x",cpu.cr3.page_directory_base);
+
+        uint32_t DIR  = (vaddr >> 22);
+        Log("DIR:%#x",DIR);
+        uint32_t PDE_addr = (cpu.cr3.page_directory_base << 12) + (DIR << 2);
+        pde.val = paddr_read(PDE_addr, 4);
+        Log("PDE_addr:%#x",PDE_addr);
+        Log("PDE_val:%#x",pde.val);
+        assert(pde.present);
+
+        uint32_t PAGE = ((vaddr >> 12) & 0x3ff);
+        uint32_t PTE_addr = (pde.val & 0xfffff000) + (PAGE << 2);
+        pte.val = paddr_read(PTE_addr, 4);
+        Log("PTE_addr:%#x",PTE_addr);
+        Log("PTE_val:%#x",pte.val);
+        assert(pte.present);
+
+        uint32_t physical_addr = (pte.val & 0xfffff000) + (vaddr & 0xfff);
+        Log("Physical_addr:%#x",physical_addr);
+
+        pde.accessed = 1;
+        paddr_write(PDE_addr,4,pde.val);
+
+        if(pte.accessed == 0 || (pte.dirty == 0 ))
+        {
+                pte.accessed = 1;
+                pte.dirty = 1;
+        }
+
+        paddr_write(PTE_addr,4,pte.val);
+        return physical_addr;
+}
+
+
 uint32_t paddr_read(paddr_t addr, int len) {
   	int mmio_id;
 	mmio_id = is_mmio(addr);
@@ -30,9 +70,36 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-  return paddr_read(addr, len);
+  if(cpu.cr0.paging)
+  {
+	  if((((addr << 20) >> 20) + len) > 0x1000) //data cross the page boundary
+	  {
+		  assert(0);
+	  }
+	  else
+	  {
+		paddr_t paddr = page_translate(addr);
+		return paddr_read(paddr, len);
+	  }
+  }
+  else	return  paddr_read(addr,len);
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
-  paddr_write(addr, len, data);
+  if(cpu.cr0.paging)
+  {
+	  if((((addr << 20) >> 20) + len) > 0x1000)
+	  {
+		  assert(0);
+	  }
+	  else
+	  {
+		  paddr_t paddr = page_translate(addr);
+		  paddr_write(paddr,len,data);
+	  }
+  }
+  else	paddr_write(addr, len, data);
 }
+
+
+

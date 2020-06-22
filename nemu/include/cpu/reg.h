@@ -1,6 +1,7 @@
 #ifndef __REG_H__
 #define __REG_H__
 
+#include "memory/mmu.h"
 #include "common.h"
 
 enum { R_EAX, R_ECX, R_EDX, R_EBX, R_ESP, R_EBP, R_ESI, R_EDI };
@@ -49,6 +50,9 @@ typedef union {
 	    uint32_t base;	// 32 base
 	    uint16_t limit;	// 16 limit
     }idtr;
+
+    CR0 cr0;
+    CR3 cr3;
    };
 } CPU_state;
 
