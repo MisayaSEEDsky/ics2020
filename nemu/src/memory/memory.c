@@ -11,7 +11,7 @@ uint8_t pmem[PMEM_SIZE];
 
 /* Memory accessing interfaces */
 
-paddr_t page_translate(vaddr_t vaddr)
+paddr_t page_translate(vaddr_t vaddr, bool writing)
 {
         PDE pde;
         PTE pte;
@@ -40,7 +40,7 @@ paddr_t page_translate(vaddr_t vaddr)
         pde.accessed = 1;
         paddr_write(PDE_addr,4,pde.val);
 
-        if(pte.accessed == 0 || (pte.dirty == 0 ))
+        if(pte.accessed == 0 || (pte.dirty == 0  && writing))
         {
                 pte.accessed = 1;
                 pte.dirty = 1;
@@ -74,11 +74,22 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
   {
 	  if((((addr << 20) >> 20) + len) > 0x1000) //data cross the page boundary
 	  {
-		  assert(0);
+		  //assert(0);
+		  int fir_len , sec_len;
+		  fir_len = 0x1000 - (addr & 0xfff);
+		  sec_len = len - fir_len;
+
+		  uint32_t fir_addr = page_translate(addr, false);
+		  uint32_t fir_mem = paddr_read(fir_addr,fir_len);
+
+		  uint32_t sec_addr = page_translate(addr + fir_len,false);
+		  uint32_t sec_mem = paddr_read(sec_addr,sec_len);
+
+		  return fir_mem + (sec_mem << (fir_len << 3));
 	  }
 	  else
 	  {
-		paddr_t paddr = page_translate(addr);
+		paddr_t paddr = page_translate(addr,false);
 		return paddr_read(paddr, len);
 	  }
   }
@@ -90,11 +101,22 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
   {
 	  if((((addr << 20) >> 20) + len) > 0x1000)
 	  {
-		  assert(0);
+		  //assert(0);
+	  	int fir_len,sec_len;
+		fir_len  = 0x1000 - (addr & 0xfff);
+                sec_len = len - fir_len;
+
+		uint32_t fir_addr = page_translate(addr,true);
+		paddr_write(fir_addr,fir_len,data);
+
+		uint32_t high_data = data >> (fir_len << 3);
+		uint32_t sec_addr = page_translate(addr + fir_len, true);
+
+		paddr_write(sec_addr,sec_len,high_data);
 	  }
 	  else
 	  {
-		  paddr_t paddr = page_translate(addr);
+		  paddr_t paddr = page_translate(addr,true);
 		  paddr_write(paddr,len,data);
 	  }
   }
