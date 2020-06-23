@@ -63,7 +63,7 @@ paddr_t page_translate(vaddr_t addr, bool is_write) {
   paddr_t PDT_base = cpu.cr3.page_directory_base;
   //Log("page_translate: dir: 0x%x page: 0x%x offset: 0x%x PDT_base: 0x%x\n", dir, page, offset, PDT_base);
   PDE pde;
-  pde.val = paddr_read((PDT_base << 12) + (dir ), 4);
+  pde.val = paddr_read((PDT_base << 12) + (dir  ), 4);
   //if (!pde.present) {
     //Log("page_translate: addr: 0x%x\n", addr);
     //Log("page_translate: dir: 0x%x page: 0x%x offset: 0x%x PDT_base: 0x%x\n", dir, page, offset, PDT_base);
