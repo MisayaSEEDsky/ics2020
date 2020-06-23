@@ -129,7 +129,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 	  if((((addr << 20) >> 20) + len) > 0x1000) //data cross the page boundary
 	  {
 		  //assert(0);
-		  int fir_len , sec_len;
+		  paddr_t fir_len , sec_len;
 		  fir_len = 0x1000 - (addr & 0xfff);
 		  sec_len = len - fir_len;
 
@@ -156,7 +156,7 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
 	  if((((addr << 20) >> 20) + len) > 0x1000)
 	  {
 		  //assert(0);
-	  	int fir_len,sec_len;
+	  	uint32_t fir_len,sec_len;
 		fir_len  = 0x1000 - (addr & 0xfff);
                 sec_len = len - fir_len;
 
