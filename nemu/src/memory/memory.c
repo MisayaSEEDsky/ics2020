@@ -16,6 +16,7 @@ paddr_t page_translate(vaddr_t vaddr, bool writing)
 	if(cpu.cr0.paging == 0 )	return vaddr;
 
         PDE pde;
+	//Log("%#x",pde.present);
         PTE pte;
 
         //Log("vaddr:%#x",vaddr);
