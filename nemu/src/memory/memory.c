@@ -13,6 +13,8 @@ uint8_t pmem[PMEM_SIZE];
 
 /*paddr_t page_translate(vaddr_t vaddr, bool writing)
 {
+	if(cpu.cr0.paging == 0 )	return vaddr;
+
         PDE pde;
         PTE pte;
 
@@ -57,28 +59,49 @@ paddr_t page_translate(vaddr_t addr, bool is_write) {
 
  if (!cpu.cr0.paging) return addr;
  // Log("page_translate: addr: 0x%x\n", addr);
-  paddr_t dir = (addr >> 22) & 0x3ff;
-  paddr_t page = (addr >> 12) & 0x3ff;
+  paddr_t pde_index  = (addr >> 22) & 0x3ff;
+  paddr_t pte_index = (addr >> 12) & 0x3ff;
   paddr_t offset = addr & 0xfff;
+  
   paddr_t PDT_base = cpu.cr3.page_directory_base;
+  paddr_t pde = (PDT_base << 12) + (pde_index << 2 );
   //Log("page_translate: dir: 0x%x page: 0x%x offset: 0x%x PDT_base: 0x%x\n", dir, page, offset, PDT_base);
-  PDE pde;
-  pde.val = paddr_read((PDT_base << 12) + (dir  ), 4);
+  
+  PDE pde_obj;
+  pde_obj.val = paddr_read(pde, 4);
   //if (!pde.present) {
     //Log("page_translate: addr: 0x%x\n", addr);
     //Log("page_translate: dir: 0x%x page: 0x%x offset: 0x%x PDT_base: 0x%x\n", dir, page, offset, PDT_base);
-  Log("cr3: %x:",cpu.cr3.page_directory_base); 
-  assert(pde.present);
+  //Log("cr3: %x:",cpu.cr3.page_directory_base); 
+  assert(pde_obj.present);
   //}
-  PTE pte;
+
+  paddr_t pte = (pde_obj.val << 12) + (pte_index << 2);
+  PTE pte_obj;
   // Log("page_translate: page_frame: 0x%x\n", pde.page_frame);
-  pte.val = paddr_read((pde.page_frame << 12) + (page ), 4);
+  pte_obj.val = paddr_read(pte, 4);
   //if (!pte.present) {
     //Log("page_translate: addr: 0x%x\n", addr);
-    assert(pte.present);
+    assert(pte_obj.present);
   //}
-  paddr_t paddr = (pte.page_frame << 12) | offset;
+  
+    if(!pde_obj.accessed)
+    {
+	    pde_obj.accessed = 1;
+	    paddr_write(pde, 4, pde_obj.val);
+    }
+
+    if(!pte_obj.accessed || (!pte_obj.dirty == 0 && is_write))
+    {
+	    pte_obj.accessed = 1;
+	    pte_obj.dirty = 1;
+	    paddr_write(pte, 4, pte_obj.val);
+    }
+    
+    paddr_t paddr = (pte_obj.page_frame << 12) | offset;
   //Log("page_translate: paddr: 0x%x\n", paddr);
+  
+
   return paddr;
 }
 
