@@ -27,7 +27,7 @@ paddr_t page_translate(vaddr_t vaddr, bool writing)
         uint32_t PDE_addr = (cpu.cr3.page_directory_base << 12) + (DIR << 2);
         pde.val = paddr_read(PDE_addr, 4);
       //  Log("PDE_addr:%#x",PDE_addr);
-        Log("PDE_val:%#x",pde.val);
+       // Log("PDE_val:%#x",pde.val);
         assert(pde.present);
 
         uint32_t PAGE = ((vaddr >> 12) & 0x3ff);
