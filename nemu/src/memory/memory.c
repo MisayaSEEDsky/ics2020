@@ -140,7 +140,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 		  uint32_t sec_addr = page_translate(addr + fir_len,false);
 		  uint32_t sec_mem = paddr_read(sec_addr,sec_len);
 
-		  return fir_mem | (sec_mem << (fir_len << 3));
+		  return fir_mem + (sec_mem << (fir_len << 3));
 	  }
 	  else
 	  {
