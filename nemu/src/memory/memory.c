@@ -39,8 +39,11 @@ paddr_t page_translate(vaddr_t vaddr, bool writing)
         uint32_t physical_addr = (pte.val & 0xfffff000) + (vaddr & 0xfff);
         //Log("Physical_addr:%#x",physical_addr);
 
-        pde.accessed = 1;
-        paddr_write(PDE_addr,4,pde.val);
+        if(pde.accessed == 0)
+	{
+		pde.accessed = 1;
+        	paddr_write(PDE_addr,4,pde.val);
+	}
 
         if(pte.accessed == 0 || (pte.dirty == 0  && writing))
         {
