@@ -11,7 +11,7 @@ uint8_t pmem[PMEM_SIZE];
 
 /* Memory accessing interfaces */
 
-/*paddr_t page_translate(vaddr_t vaddr, bool writing)
+paddr_t page_translate(vaddr_t vaddr, bool writing)
 {
 	if(cpu.cr0.paging == 0 )	return vaddr;
 
@@ -51,11 +51,11 @@ uint8_t pmem[PMEM_SIZE];
         paddr_write(PTE_addr,4,pte.val);
         return physical_addr;
 }
-*/
 
 
 
-paddr_t page_translate(vaddr_t addr, bool is_write) {
+
+/*paddr_t page_translate(vaddr_t addr, bool is_write) {
 
  if (!cpu.cr0.paging) return addr;
  // Log("page_translate: addr: 0x%x\n", addr);
@@ -104,6 +104,7 @@ paddr_t page_translate(vaddr_t addr, bool is_write) {
 
   return paddr;
 }
+*/
 
 uint32_t paddr_read(paddr_t addr, int len) {
   	int mmio_id;
