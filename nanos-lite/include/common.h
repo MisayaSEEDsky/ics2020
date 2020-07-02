@@ -5,6 +5,7 @@
 #include <klib.h>
 #include "debug.h"
 _RegSet* do_syscall(_RegSet *r);
+_RegSet* schedule(_RegSet *prev);
 typedef char bool;
 #define true 1
 #define false 0
