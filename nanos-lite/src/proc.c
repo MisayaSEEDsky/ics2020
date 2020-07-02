@@ -5,7 +5,8 @@
 static PCB pcb[MAX_NR_PROC];
 static int nr_proc = 0;
 PCB *current = NULL;
-
+static int schedule_count = 0;
+static int change_schedule = 200;
 uintptr_t loader(_Protect *as, const char *filename);
 
 void load_prog(const char *filename) {
@@ -29,8 +30,20 @@ void load_prog(const char *filename) {
 _RegSet* schedule(_RegSet *prev) {
   
 	current->tf = prev;
+	schedule_count++;
 	//current = &pcb[0];
-	current =  (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+//	current =  (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+
+	if((schedule_count >= change_schedule) && (current != &pcb[1]))
+	{
+		current = &pcb[1];
+		schedule_count = 0;
+	}
+	else
+	{
+		current =&pcb[0];
+	}
+
 	_switch(&current->as);
 	return current->tf;
 	//return NULL;
