@@ -53,6 +53,8 @@ typedef union {
 
     CR0 cr0;
     CR3 cr3;
+
+    bool INTR;
    };
 } CPU_state;
 
